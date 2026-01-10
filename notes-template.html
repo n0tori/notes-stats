@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>notes</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="base.css">
+  <style>
+    .big-stat {
+      text-align: center;
+      margin: 30px 0;
+      padding: 20px;
+      background-color: #ddd9c8;
+      border: 3px double #333;
+    }
+
+    .big-stat-value {
+      font-size: 4em;
+      font-weight: bold;
+      color: #2a2a2a;
+      line-height: 1;
+    }
+
+    .big-stat-label {
+      font-size: 1.2em;
+      color: #555;
+      margin-top: 10px;
+    }
+
+    .inline-stats {
+      margin: 20px 0;
+      line-height: 2;
+    }
+
+    .inline-stats p {
+      margin: 5px 0;
+    }
+
+    .stat-highlight {
+      background-color: #ddd9c8;
+      padding: 2px 8px;
+      font-weight: bold;
+      color: #2a2a2a;
+    }
+
+    .ascii-bar {
+      font-family: monospace;
+      margin: 8px 0;
+      white-space: pre;
+    }
+
+    .task-progress {
+      margin: 20px 0;
+      font-family: monospace;
+      font-size: 1.1em;
+    }
+
+    .progress-bar-ascii {
+      display: inline-block;
+      background-color: #ddd9c8;
+      padding: 5px 10px;
+      border: 2px solid #333;
+    }
+
+    .simple-list {
+      list-style: none;
+      padding: 0;
+      margin: 15px 0;
+    }
+
+    .simple-list li {
+      padding: 8px 0;
+      border-bottom: 1px dashed #999;
+    }
+
+    .simple-list li:last-child {
+      border-bottom: none;
+    }
+
+    .simple-list .label {
+      color: #555;
+      display: inline-block;
+      min-width: 200px;
+    }
+
+    .simple-list .value {
+      font-weight: bold;
+      color: #2a2a2a;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 5px;
+      margin: 20px 0;
+      font-family: monospace;
+    }
+
+    .calendar-month {
+      padding: 10px;
+      background-color: #ddd9c8;
+      text-align: center;
+      border: 1px solid #999;
+    }
+
+    .month-label {
+      font-size: 0.8em;
+      color: #555;
+    }
+
+    .month-value {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #2a2a2a;
+    }
+
+    .fun-fact {
+      background-color: #ddd9c8;
+      padding: 15px 20px;
+      margin: 20px 0;
+      border-left: 4px solid #d87a16;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .box {
+      background-color: #ddd9c8;
+      padding: 20px;
+      border: 2px dashed #333;
+    }
+
+    section {
+      margin: 40px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav>
+      <ul>
+        <li><a href="/">~/</a></li>
+        <li>|</li>
+        <li><a href="writings">~/writings</a></li>
+        <li>|</li>
+        <li><a href="projects">~/projects</a></li>
+        <li>|</li>
+        <li><a href="notes" class="active">~/notes</a></li>
+        <li>|</li>
+        <li><a href="contact">~/contact</a></li>
+        <li style="float: right">Made in <span class="flag-emoji">🇬🇧</span></li>
+      </ul>
+    </nav>
+
+    <main>
+      <h1>Notes Statistics</h1>
+      <p>Aggregated stats are calculated using a Python script on my Obsidian markdown notes, which updates this html file every week using a cronjob.</p>
+      <hr>
+      <div class="big-stat">
+        <div class="big-stat-value">{{TOTAL_NOTES}}</div>
+        <div class="big-stat-label">notes across {{TOTAL_VAULTS}} vaults</div>
+      </div>
+
+      <div class="inline-stats">
+        <p>&gt; That's <span class="stat-highlight">{{TOTAL_WORDS}}</span> total words, averaging <span class="stat-highlight">{{AVG_WORDS}}</span> words per note.</p>
+        <p>&gt; <span class="stat-highlight">{{TOTAL_LINES}}</span> lines of markdown taking up <span class="stat-highlight">{{DISK_USAGE}}</span> on disk.</p>
+        <p>&gt; Last edited <span class="stat-highlight">{{DAYS_SINCE_LAST_EDIT}}</span> days ago.</p>
+      </div>
+
+      <section>
+        <h2>Task Completion</h2>
+        <div class="task-progress">
+          [{{TASK_PROGRESS_BAR}}] {{TASK_COMPLETION}}% ({{TASKS_COMPLETED}}/{{TOTAL_TASKS}})
+        </div>
+        <p style="color: #555;">{{TASKS_UNCHECKED}} tasks still unchecked</p>
+      </section>
+
+      <section>
+        <h2>What's Inside</h2>
+        <div class="two-col">
+          <div class="box">
+            <h3 style="margin-top: 0;">Links & Media</h3>
+            <ul class="simple-list">
+              <li><span class="label">Internal Links</span> <span class="value">{{INTERNAL_LINKS}}</span></li>
+              <li><span class="label">External URLs</span> <span class="value">{{EXTERNAL_URLS}}</span></li>
+              <li><span class="label">Images</span> <span class="value">{{IMAGES}}</span></li>
+            </ul>
+          </div>
+          <div class="box">
+            <h3 style="margin-top: 0;">Code & Math</h3>
+            <ul class="simple-list">
+              <li><span class="label">Code Blocks</span> <span class="value">{{CODE_BLOCKS}}</span></li>
+              <li><span class="label">Math Expressions</span> <span class="value">{{MATH_EXPR}}</span></li>
+              <li><span class="label">Tables</span> <span class="value">{{TABLES}}</span></li>
+              <li><span class="label">Blockquotes</span> <span class="value">{{BLOCKQUOTES}}</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="fun-fact">
+          <b>Headers:</b> {{H1_COUNT}} H1s, {{H2_COUNT}} H2s, {{H3_COUNT}} H3s, {{H4_COUNT}} H4+ |
+          <b>Lists:</b> {{LISTS}} items |
+          <b>Horizontal Rules:</b> {{HR_COUNT}}
+        </div>
+      </section>
+
+      <section>
+        <h2>Activity Timeline</h2>
+        <p style="color: #555;">Last 6 months of note modifications</p>
+        <div class="calendar-grid">
+          {{MONTHLY_ACTIVITY}}
+        </div>
+      </section>
+
+      <section>
+        <h2>When I Write</h2>
+        <p style="color: #555;">Most active day: <b>{{MOST_ACTIVE_DAY}}</b> ({{MOST_ACTIVE_DAY_COUNT}} notes modified)</p>
+        <div style="margin: 20px 0; font-family: monospace; white-space: pre-line;">
+          {{DAY_OF_WEEK_BARS}}
+        </div>
+      </section>
+
+      <section>
+        <h2>Note Sizes</h2>
+        <div style="margin: 20px 0;">
+          <p>&gt; <b>{{LONGEST_BRACKET}}</b> words: longest note category ({{LONGEST_COUNT}} notes)</p>
+          <p>&gt; <b>{{SHORTEST_BRACKET}}</b> words: shortest note category ({{SHORTEST_COUNT}} notes)</p>
+          <p>&gt; Most notes are in the <b>{{MOST_COMMON_BRACKET}}</b> range ({{MOST_COMMON_COUNT}} notes)</p>
+        </div>
+        <ul class="simple-list">
+          {{LENGTH_DISTRIBUTION}}
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p style="border-bottom: 1px dashed #999"><a href="rss.xml"><img src="static/rss.png" alt="RSS" width="16" height="16"></a></p>
+      <p>Last Updated: <b>{{LAST_UPDATED}}</b></p>
+      <p>File size: <b>{{FILE_SIZE}}</b></p>
+      <p style="border-bottom: 1px dashed #999"><b>Licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPL</a></b></p>
+      <p>Donate <b style="color: #d87a16">XMR</b> to the author:</p>
+      <p>45gcPYy1NdNfjXLXua77uEUvbx49bPR9ZZ4NNUcXEqwWGEogEauDpcU3HhvWEb1voz8eVchUV5ZspDWG66ViVSnH3GHphn6</p>
+    </footer>
+  </div>
+</body>
+</html>
